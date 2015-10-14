@@ -11,7 +11,7 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-public class TestCrawling extends WebCrawler {
+public class ynCrawling extends WebCrawler {
 
 
     private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
@@ -20,14 +20,15 @@ public class TestCrawling extends WebCrawler {
      @Override
      public boolean shouldVisit(WebURL url) {
          String href = url.getURL().toLowerCase();
-         return !FILTERS.matcher(href).matches()
-                && (href.startsWith("http://news.livedoor.com/article/detail/") || href.startsWith("http://news.livedoor.com/topics/"));
-     }
+         return !FILTERS.matcher(href).matches() && (href.startsWith("http://headlines.yahoo.co.jp/")
+         		||  href.startsWith("http://news.yahoo.co.jp/flash")
+         		||  href.startsWith("http://news.yahoo.co.jp/pickup/"));
+ }
 
      @Override
      public void visit(Page page) {
          String url = page.getWebURL().getURL();
-         File file = new File("/data/test1.txt");
+         File file = new File("/data/test2.txt");
 
 
 
@@ -36,7 +37,7 @@ public class TestCrawling extends WebCrawler {
              try {
      			FileWriter pw = new FileWriter(file,true);
 
-     			if(url.startsWith("http://news.livedoor.com/article/detail/")){
+     			if(url.startsWith("http://headlines.yahoo.co.jp/hl?a") && !url.contains("view-000")){
 	                pw.write("Docid: " + docid + "\r\n");
 	                pw.write("URL: " + url + "\r\n");
 	                pw.write("---------------------------------------------------\r\n");
@@ -50,4 +51,3 @@ public class TestCrawling extends WebCrawler {
          }
     }
 }
-

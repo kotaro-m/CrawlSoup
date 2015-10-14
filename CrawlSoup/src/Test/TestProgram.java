@@ -1,18 +1,8 @@
 package Test;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
 import Crawler.TestCrawling;
+import Crawler.ynCrawling;
+import Jsoup.HtmlParser;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -28,65 +18,45 @@ public class TestProgram {
 		int numberOfCrawlers = 1;
 		int maxDepthOfCrawling=2;
 
-		CrawlConfig config = new CrawlConfig();
-		config.setCrawlStorageFolder(crawlStorageFolder);
-		config.setMaxDepthOfCrawling(maxDepthOfCrawling);
-		config.setMaxPagesToFetch(1000);
-
-		PageFetcher pageFetcher = new PageFetcher(config);
-		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-
-		controller.addSeed("http://news.livedoor.com/");
-		controller.start(TestCrawling.class, numberOfCrawlers);
-
-	    //HTMLパース
-		try{
-			String doc = "URL";
-			ArrayList<String> URL_Forder = new ArrayList<String>();
+		CrawlConfig config1 = new CrawlConfig();
+		CrawlConfig config2 = new CrawlConfig();
+		config1.setMaxDepthOfCrawling(maxDepthOfCrawling);
+		config2.setMaxDepthOfCrawling(maxDepthOfCrawling);
+		config1.setCrawlStorageFolder(crawlStorageFolder + "/crawler1");
+		config2.setCrawlStorageFolder(crawlStorageFolder + "/crawler2");
+		config1.setMaxPagesToFetch(1000);
+		config2.setMaxPagesToFetch(100);
 
 
-			String filePath = "/data/test.txt";
-			BufferedReader br = new BufferedReader(new FileReader(filePath));
-			String readText = null;
-			while ( (readText = br.readLine()) != null ){
-				if(readText.startsWith(doc)){
-					readText = readText.replace("URL: ","");
-		        	URL_Forder.add(readText);
-		        }
+		PageFetcher pageFetcher1 = new PageFetcher(config1);
+		PageFetcher pageFetcher2 = new PageFetcher(config2);
+		RobotstxtConfig robotstxtConfig1 = new RobotstxtConfig();
+		RobotstxtConfig robotstxtConfig2 = new RobotstxtConfig();
+		RobotstxtServer robotstxtServer1 = new RobotstxtServer(robotstxtConfig1, pageFetcher1);
+		RobotstxtServer robotstxtServer2 = new RobotstxtServer(robotstxtConfig2, pageFetcher2);
+		CrawlController controller1 = new CrawlController(config1, pageFetcher1, robotstxtServer1);
+		CrawlController controller2 = new CrawlController(config2, pageFetcher2, robotstxtServer2);
 
-			}
-			br.close();
+		controller1.addSeed("http://news.livedoor.com/");
+		controller2.addSeed("http://news.yahoo.co.jp/");
+		
+		controller1.start(TestCrawling.class, numberOfCrawlers);
 
-			File file = new File("/data/article.txt");
-			FileWriter pw = new FileWriter(file,true);
-			for(int i=0;i<URL_Forder.size();i++){
-		        String url = URL_Forder.get(i);
-		        Document document = Jsoup.connect(url).get();
-				Element content = document.select("article").first();
-				if(content!=null){
-					String title = content.select("h1").first().text();
-					String time = content.select("time").first().text();
-					String article = content.select("[itemprop=articleBody]").text().replace(" ", "\r\n");
-					pw.write("title:" + title + "\r\n");
-					pw.write("time:" + time + "\r\n");
-					pw.write("article:" + article + "\r\n");
-					pw.write("---------------------------\n" + "\r\n\n\r");
-				}
-		    }
-			pw.close();
-	    }
+	    //livedoorHTMLパース
+		HtmlParser.HtmlParser_livedoor();
 
-	    catch(FileNotFoundException e){
-	        	  System.out.println(e);
-	    }
-	    catch(IOException e){
-	    	System.out.println(e);
-	    }
 
+
+		//Yahoo!ニュース クローリング
+
+		
+		controller2.start(ynCrawling.class, numberOfCrawlers);
+
+		HtmlParser.HtmlParser_yn();
+		
+		//時間計測
 		long end = System.currentTimeMillis();
-		System.out.println((end - start)  + "ms");
+		System.out.println((end - start)  + "ms\n");
 	}
 }
 
