@@ -12,11 +12,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import kuromoji.kuromoji;
+
 public class HtmlParser {
 	public static void HtmlParser_livedoor(){
 			try{
 			ArrayList<String> URL_Forder = new ArrayList<String>();
-
 
 			String filePath = "/data/test1.txt";
 			File readfile = new File(filePath);
@@ -27,13 +28,13 @@ public class HtmlParser {
 					readText = readText.replace("URL: ","");
 		        	URL_Forder.add(readText);
 		        }
-
 			}
 			br.close();
 			readfile.delete();
 
 			File file = new File("/data/article1.txt");
 			FileWriter pw = new FileWriter(file,true);
+
 			for(int i=0;i<URL_Forder.size();i++){
 		        String url = URL_Forder.get(i);
 		        Document document = Jsoup.connect(url).timeout(0).get();
@@ -61,7 +62,6 @@ public class HtmlParser {
 		    }
 			pw.close();
 	    }
-
 	    catch(FileNotFoundException e){
 	        	  System.out.println(e);
 	    }
@@ -74,7 +74,6 @@ public class HtmlParser {
 		try{
 		ArrayList<String> URL_Forder = new ArrayList<String>();
 
-
 		String filePath = "/data/test2.txt";
 		File readfile = new File(filePath);
 		BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -84,13 +83,14 @@ public class HtmlParser {
 				readText = readText.replace("URL: ","");
 	        	URL_Forder.add(readText);
 	        }
-
 		}
 		br.close();
 		readfile.delete();
 
 		File file = new File("/data/article2.txt");
 		FileWriter pw = new FileWriter(file,true);
+
+		ArrayList<String> temp = new ArrayList<String>();
 		for(int i=0;i<URL_Forder.size();i++){
 	        String url = URL_Forder.get(i);
 	        Document document = Jsoup.connect(url).timeout(0).get();
@@ -103,14 +103,17 @@ public class HtmlParser {
 				pw.write("title:" + title + "\r\n");
 				pw.write("time:" + time + "\r\n");
 				pw.write("article:" + article + "\r\n");
-				pw.write("---------------------------\n" + "\r\n\n\r");
+				temp = kuromoji.kuromoji(article);
+				pw.write("tag:\r\n");
+				for(int j=0;j<temp.size();j++)
+					pw.write(temp.get(j));
+				pw.write("---------------------------" + "\r\n\r\n");
 			}
 			else
 				pw.write("記事がありません");
 	    }
 		pw.close();
     }
-
     catch(FileNotFoundException e){
         	  System.out.println(e);
     }

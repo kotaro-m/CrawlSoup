@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="C:/Program Files (x86)/pleiades/eclipse/jar/crawler4j/tika-parsers-1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/pleiades/eclipse/jar/jsoup-1.8.3.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files (x86)/pleiades/eclipse/jar/slf4j-api-1.7.12.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/pleiades/eclipse/jar/kuromoji-0.7.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

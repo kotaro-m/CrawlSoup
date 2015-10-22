@@ -1,6 +1,5 @@
 package Test;
 
-import Crawler.TestCrawling;
 import Crawler.ynCrawling;
 import Jsoup.HtmlParser;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -13,7 +12,6 @@ public class TestProgram {
 	public static void main(String[] args) throws Exception{
 		long start = System.currentTimeMillis();
 
-		//クローリング
 		String crawlStorageFolder = "/data/crawl/root";
 		int numberOfCrawlers = 1;
 		int maxDepthOfCrawling=2;
@@ -24,8 +22,8 @@ public class TestProgram {
 		config2.setMaxDepthOfCrawling(maxDepthOfCrawling);
 		config1.setCrawlStorageFolder(crawlStorageFolder + "/crawler1");
 		config2.setCrawlStorageFolder(crawlStorageFolder + "/crawler2");
-		config1.setMaxPagesToFetch(1000);
-		config2.setMaxPagesToFetch(100);
+		config1.setMaxPagesToFetch(100);
+		config2.setMaxPagesToFetch(15);
 
 
 		PageFetcher pageFetcher1 = new PageFetcher(config1);
@@ -37,23 +35,20 @@ public class TestProgram {
 		CrawlController controller1 = new CrawlController(config1, pageFetcher1, robotstxtServer1);
 		CrawlController controller2 = new CrawlController(config2, pageFetcher2, robotstxtServer2);
 
-		controller1.addSeed("http://news.livedoor.com/");
+		//controller1.addSeed("http://news.livedoor.com/");
 		controller2.addSeed("http://news.yahoo.co.jp/");
-		
-		controller1.start(TestCrawling.class, numberOfCrawlers);
 
+		//livedoorニュース クローリング
+		//controller1.start(TestCrawling.class, numberOfCrawlers);
 	    //livedoorHTMLパース
-		HtmlParser.HtmlParser_livedoor();
-
+		//HtmlParser.HtmlParser_livedoor();
 
 
 		//Yahoo!ニュース クローリング
-
-		
 		controller2.start(ynCrawling.class, numberOfCrawlers);
-
+	    //Yahoo!ニュース HTMLパース
 		HtmlParser.HtmlParser_yn();
-		
+
 		//時間計測
 		long end = System.currentTimeMillis();
 		System.out.println((end - start)  + "ms\n");
