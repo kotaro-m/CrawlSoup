@@ -35,6 +35,7 @@ public class HtmlParser {
 			File file = new File("/data/article1.txt");
 			FileWriter pw = new FileWriter(file,true);
 
+			ArrayList<String> temp = new ArrayList<String>();
 			for(int i=0;i<URL_Forder.size();i++){
 		        String url = URL_Forder.get(i);
 		        Document document = Jsoup.connect(url).timeout(0).get();
@@ -55,6 +56,10 @@ public class HtmlParser {
 					pw.write("title:" + title + "\r\n");
 					pw.write("time:" + time + "\r\n");
 					pw.write("article:" + text + "\r\n");
+					temp = kuromoji.kuromoji(text);
+					pw.write("tag:");
+					for(int j=0;j<temp.size();j++)
+						pw.write(temp.get(j));
 					pw.write("---------------------------\n" + "\r\n\n\r");
 				}
 				else
@@ -104,7 +109,7 @@ public class HtmlParser {
 				pw.write("time:" + time + "\r\n");
 				pw.write("article:" + article + "\r\n");
 				temp = kuromoji.kuromoji(article);
-				pw.write("tag:\r\n");
+				pw.write("tag:");
 				for(int j=0;j<temp.size();j++)
 					pw.write(temp.get(j));
 				pw.write("---------------------------" + "\r\n\r\n");
