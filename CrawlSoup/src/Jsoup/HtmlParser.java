@@ -12,8 +12,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import kuromoji.kuromoji;
-
 public class HtmlParser {
 	public static void HtmlParser_livedoor(){
 			try{
@@ -32,14 +30,13 @@ public class HtmlParser {
 			br.close();
 			readfile.delete();
 
-			File file = new File("/data/article1.txt");
+			File file = new File("/data/article.txt");
 			FileWriter pw = new FileWriter(file,true);
 
-			ArrayList<String> temp = new ArrayList<String>();
 			for(int i=0;i<URL_Forder.size();i++){
 		        String url = URL_Forder.get(i);
 		        Document document = Jsoup.connect(url).timeout(0).get();
-		        pw.write("URL:" + url);
+		        pw.write("URL:" + url + "\r\n");
 				Element content = document.select("article").first();
 				if(content!=null){
 					String title = content.select("h1").first().text();
@@ -56,10 +53,6 @@ public class HtmlParser {
 					pw.write("title:" + title + "\r\n");
 					pw.write("time:" + time + "\r\n");
 					pw.write("article:" + text + "\r\n");
-					temp = kuromoji.kuromoji(text);
-					pw.write("tag:");
-					for(int j=0;j<temp.size();j++)
-						pw.write(temp.get(j));
 					pw.write("---------------------------\n" + "\r\n\n\r");
 				}
 				else
@@ -92,14 +85,13 @@ public class HtmlParser {
 		br.close();
 		readfile.delete();
 
-		File file = new File("/data/article2.txt");
+		File file = new File("/data/article.txt");
 		FileWriter pw = new FileWriter(file,true);
 
-		ArrayList<String> temp = new ArrayList<String>();
 		for(int i=0;i<URL_Forder.size();i++){
 	        String url = URL_Forder.get(i);
 	        Document document = Jsoup.connect(url).timeout(0).get();
-			pw.write("URL:" + url +"\r\n");
+			pw.write("URL:" + url + "\r\n");
 			Element content = document.select("[class=article]").first();
 			if(content!=null){
 				String title = content.select("h1").text();
@@ -108,10 +100,6 @@ public class HtmlParser {
 				pw.write("title:" + title + "\r\n");
 				pw.write("time:" + time + "\r\n");
 				pw.write("article:" + article + "\r\n");
-				temp = kuromoji.kuromoji(article);
-				pw.write("tag:");
-				for(int j=0;j<temp.size();j++)
-					pw.write(temp.get(j));
 				pw.write("---------------------------" + "\r\n\r\n");
 			}
 			else
